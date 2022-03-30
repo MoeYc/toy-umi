@@ -4,6 +4,7 @@
   import ReactDOM from 'react-dom';
   import { useSnapshot } from 'valtio';
   import { proxyWithComputed } from 'valtio/utils';
+  import { HashRouter, Route, Routes, Outlet, Link } from 'react-router-dom';
 
   const state = proxyWithComputed(
     { todos: [] },
@@ -78,10 +79,38 @@
     );
   }
 
-  ReactDOM.render(<App />, document.getElementById('root'));
+  function About() {
+    return <h2>About</h2>;
+  }
+
+  function Layout() {
+    return (
+      <div>
+        <div>
+          <Link to="/">Home</Link> /
+          <Link to="/about">About</Link>
+        </div>
+        <Outlet />
+      </div>
+    )
+  }
+
+  ReactDOM.render((
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route path="" element={<App />} />
+          <Route path="about" element={<About />} />
+        </Route>
+      </Routes>
+    </HashRouter>
+  ), document.getElementById('root'));
 </script>
 
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script>
+  globalThis.process = { env: { NODE_ENV: 'development' } };
+</script>
 <script type="importmap">
   {
     "imports": {
